@@ -13,7 +13,6 @@ import { QuizPortalModal } from './components/modals/QuizPortalModal';
 import { TeacherDashboardModal } from './components/modals/TeacherDashboardModal';
 import { ResultsCertificateModal } from './components/modals/ResultsCertificateModal';
 import { BotanicalGardenModal } from './components/modals/BotanicalGardenModal';
-import { CharacterCustomizerModal } from './components/modals/CharacterCustomizerModal';
 import { ChatDrawer } from './components/hud/ChatDrawer';
 import { EmoteWheel } from './components/hud/EmoteWheel';
 import { GameCanvas } from './components/GameCanvas';
@@ -61,7 +60,6 @@ export default function App() {
   const [showTeacherDashboard, setShowTeacherDashboard] = useState(false);
   const [showCertificate, setShowCertificate] = useState(false);
   const [showBotanyModal, setShowBotanyModal] = useState(false);
-  const [showCustomizerModal, setShowCustomizerModal] = useState(false);
   const [catToast, setCatToast] = useState<string | null>(null);
   const [showChat, setShowChat] = useState(false);
   const [showEmote, setShowEmote] = useState(false);
@@ -233,7 +231,6 @@ export default function App() {
     else if (action === 'mission3') setActiveMissionModal('mission3');
     else if (action === 'mission4') setActiveMissionModal('mission4');
     else if (action === 'botanical_garden') setShowBotanyModal(true);
-    else if (action === 'customizer') setShowCustomizerModal(true);
     else if (action === 'quiz') setActiveMissionModal('quiz');
     else if (action === 'pet_cat') {
       sound.playCozyClick();
@@ -359,7 +356,6 @@ export default function App() {
             onToggleEmote={() => setShowEmote((prev) => !prev)}
             onExitRoom={currentRoom !== 'town' ? handleExitToTown : undefined}
             onOpenBotany={() => setShowBotanyModal(true)}
-            onOpenCustomizer={() => setShowCustomizerModal(true)}
           />
 
           {/* NPC Dialogue Modal */}
@@ -479,15 +475,6 @@ export default function App() {
             isOpen={showBotanyModal}
             onClose={() => setShowBotanyModal(false)}
             onRewardScore={handleBotanyScoreReward}
-          />
-
-          {/* Character Customizer Modal (Hair, Outfit, Face, Accessories) */}
-          <CharacterCustomizerModal
-            isOpen={showCustomizerModal}
-            currentLook={playerProfile.customLook}
-            currentAvatarId={playerProfile.avatarId}
-            onSave={handleSaveCustomLook}
-            onClose={() => setShowCustomizerModal(false)}
           />
 
           {/* Cat Petting Wholesome Toast */}

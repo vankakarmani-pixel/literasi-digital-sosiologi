@@ -499,7 +499,6 @@ export const INTERIOR_ROOMS: Record<string, InteriorRoom> = {
       { id: 'desk_curved', name: 'Meja Belajar Lengkung Siswa', type: 'desk', x: 120, y: 180, w: 240, h: 80, color: '#b45309', label: 'MEJA BELAJAR SOSIOLOGI' },
 
       // Vanity Dressing Mirror: Interactive Character Customizer! (user image 2)
-      { id: 'mirror_custom', name: 'Cermin Rias & Kustomisasi Karakter', type: 'terminal', x: 580, y: 110, w: 150, h: 80, color: '#ec4899', label: 'CERMIN KUSTOMISASI [E]', interactiveAction: 'customizer' },
 
       // Cute Bed with soft pastel duvet
       { id: 'bed_cozy', name: 'Tempat Tidur Estetik dengan Bantal Hati', type: 'sofa', x: 100, y: 80, w: 160, h: 90, color: '#fbcfe8', label: 'Kasur Empuk' },

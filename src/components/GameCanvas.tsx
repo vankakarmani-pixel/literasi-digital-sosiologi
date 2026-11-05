@@ -287,8 +287,8 @@ export const GameCanvas: React.FC<Props> = ({
               if (currentTime - lastAlarmTime.current > 1200) {
                 sound.playAlarm();
                 lastAlarmTime.current = currentTime;
-                playerPos.current.x = 450;
-                playerPos.current.y = 1630;
+                playerPos.current.x = 520;
+                playerPos.current.y = 1660;
               }
             }
           }
@@ -443,43 +443,138 @@ export const GameCanvas: React.FC<Props> = ({
         ctx.textAlign = 'center';
         ctx.fillText(interior.name.toUpperCase(), interior.w / 2, 32);
 
-        // Render Interior Furniture & Objects
+        // Render Interior Furniture & Objects (Pixel Art Style)
         for (const furn of interior.furniture) {
           ctx.save();
-          // Shadow
-          ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
-          ctx.fillRect(furn.x + 4, furn.y + 4, furn.w, furn.h);
+          const fx = Math.round(furn.x);
+          const fy = Math.round(furn.y);
+          const fw = Math.round(furn.w);
+          const fh = Math.round(furn.h);
 
-          // Furniture base
+          // Pixel drop shadow
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
+          ctx.fillRect(fx + 4, fy + 4, fw, fh);
+
+          // Base chassis with pixel border
           ctx.fillStyle = furn.color || '#334155';
-          ctx.beginPath();
-          ctx.roundRect(furn.x, furn.y, furn.w, furn.h, 6);
-          ctx.fill();
+          ctx.fillRect(fx, fy, fw, fh);
+          ctx.strokeStyle = '#0f172a';
+          ctx.lineWidth = 2;
+          ctx.strokeRect(fx, fy, fw, fh);
 
-          ctx.strokeStyle = '#ffffff40';
-          ctx.lineWidth = 1.5;
-          ctx.stroke();
+          // Top pixel highlight
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.18)';
+          ctx.fillRect(fx + 2, fy + 2, fw - 4, 3);
+
+          if (furn.type === 'terminal' || furn.type === 'computer') {
+            // Pixel Computer Workstation: Monitor + Screen + Keyboard
+            const monW = Math.min(fw - 16, 64);
+            const monH = Math.min(fh - 22, 36);
+            const monX = fx + Math.floor((fw - monW) / 2);
+            const monY = fy + 6;
+
+            // Monitor bezel
+            ctx.fillStyle = '#0f172a';
+            ctx.fillRect(monX, monY, monW, monH);
+            // Glowing pixel screen
+            ctx.fillStyle = '#0ea5e9';
+            ctx.fillRect(monX + 3, monY + 3, monW - 6, monH - 6);
+            // Screen scanlines / code bars
+            ctx.fillStyle = '#bae6fd';
+            ctx.fillRect(monX + 6, monY + 7, Math.max(8, monW - 22), 2);
+            ctx.fillRect(monX + 6, monY + 12, Math.max(6, monW - 30), 2);
+            ctx.fillRect(monX + 6, monY + 17, Math.max(10, monW - 18), 2);
+
+            // Pixel Keyboard
+            const kbW = Math.min(fw - 24, 48);
+            const kbX = fx + Math.floor((fw - kbW) / 2);
+            const kbY = monY + monH + 4;
+            if (kbY + 8 <= fy + fh) {
+              ctx.fillStyle = '#1e293b';
+              ctx.fillRect(kbX, kbY, kbW, 8);
+              ctx.fillStyle = '#94a3b8';
+              for (let kx = kbX + 3; kx < kbX + kbW - 4; kx += 5) {
+                ctx.fillRect(kx, kbY + 2, 3, 2);
+                ctx.fillRect(kx, kbY + 5, 3, 2);
+              }
+            }
+          } else if (furn.type === 'server') {
+            // Pixel Server Rack: Horizontal bays + vents + blinking LEDs
+            ctx.fillStyle = '#0f172a';
+            ctx.fillRect(fx + 6, fy + 8, fw - 12, fh - 16);
+            for (let bayY = fy + 12; bayY < fy + fh - 12; bayY += 12) {
+              ctx.fillStyle = '#1e293b';
+              ctx.fillRect(fx + 9, bayY, fw - 18, 8);
+              const ledOn = Math.sin(currentTime * 0.006 + bayY + fx) > 0;
+              ctx.fillStyle = ledOn ? '#22d3ee' : '#0369a1';
+              ctx.fillRect(fx + 12, bayY + 2, 3, 3);
+              ctx.fillStyle = !ledOn ? '#10b981' : '#047857';
+              ctx.fillRect(fx + 18, bayY + 2, 3, 3);
+            }
+          } else if (furn.type === 'shelf') {
+            // Pixel Bookshelf: Shelves + colorful pixel books
+            const bookColors = ['#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#a855f7', '#ec4899'];
+            for (let shelfY = fy + 8; shelfY < fy + fh - 10; shelfY += 18) {
+              ctx.fillStyle = '#451a03';
+              ctx.fillRect(fx + 4, shelfY + 12, fw - 8, 3);
+              let bx = fx + 7;
+              let idx = 0;
+              while (bx < fx + fw - 10) {
+                const bw = 5 + ((idx * 3) % 3);
+                ctx.fillStyle = bookColors[(idx + Math.floor(fx)) % bookColors.length];
+                ctx.fillRect(bx, shelfY, bw, 12);
+                ctx.fillStyle = 'rgba(255,255,255,0.25)';
+                ctx.fillRect(bx + 1, shelfY + 1, 1, 10);
+                bx += bw + 1;
+                idx++;
+              }
+            }
+          } else if (furn.type === 'plant') {
+            // Pixel Potted Plant: Terracotta pot + pixel leaves
+            const cx = fx + Math.floor(fw / 2);
+            const cy = fy + Math.floor(fh / 2);
+            ctx.fillStyle = '#b45309';
+            ctx.fillRect(cx - 10, cy + 2, 20, 14);
+            ctx.fillStyle = '#d97706';
+            ctx.fillRect(cx - 12, cy, 24, 4);
+            // Pixel leaves
+            ctx.fillStyle = '#15803d';
+            ctx.fillRect(cx - 14, cy - 12, 12, 12);
+            ctx.fillRect(cx + 2, cy - 12, 12, 12);
+            ctx.fillStyle = '#22c55e';
+            ctx.fillRect(cx - 8, cy - 16, 16, 14);
+          } else if (furn.type === 'sofa') {
+            // Pixel Sofa / Bed: Cushions + pillows
+            ctx.fillStyle = 'rgba(0,0,0,0.2)';
+            ctx.fillRect(fx + 6, fy + 6, fw - 12, fh - 12);
+            ctx.fillStyle = '#fdf2f8';
+            ctx.fillRect(fx + 10, fy + 10, 22, 16);
+            if (fw > 80) {
+              ctx.fillRect(fx + fw - 32, fy + 10, 22, 16);
+            }
+          } else if (furn.type === 'desk') {
+            // Pixel Desk: Paper sheets + coffee mug
+            ctx.fillStyle = '#f8fafc';
+            ctx.fillRect(fx + 14, fy + 12, 18, 22);
+            ctx.fillStyle = '#94a3b8';
+            ctx.fillRect(fx + 17, fy + 16, 12, 2);
+            ctx.fillRect(fx + 17, fy + 21, 10, 2);
+            ctx.fillRect(fx + 17, fy + 26, 12, 2);
+            // Coffee mug
+            if (fw > 70) {
+              ctx.fillStyle = '#e2e8f0';
+              ctx.fillRect(fx + fw - 24, fy + 14, 10, 10);
+              ctx.fillStyle = '#78350f';
+              ctx.fillRect(fx + fw - 22, fy + 16, 6, 4);
+            }
+          }
 
           // Labels on furniture
           if (furn.label) {
             ctx.fillStyle = '#f8fafc';
-            ctx.font = 'bold 10px "Chakra Petch", sans-serif';
+            ctx.font = 'bold 9px "Chakra Petch", sans-serif';
             ctx.textAlign = 'center';
-            ctx.fillText(furn.label, furn.x + furn.w / 2, furn.y + furn.h / 2 + 3);
-          }
-
-          // Blinking LEDs on servers / terminals
-          if (furn.type === 'server' || furn.type === 'terminal') {
-            const ledOn = Math.sin(currentTime * 0.005 + furn.x) > 0;
-            ctx.fillStyle = ledOn ? '#22d3ee' : '#0369a1';
-            ctx.beginPath();
-            ctx.arc(furn.x + 12, furn.y + 12, 3, 0, Math.PI * 2);
-            ctx.fill();
-
-            ctx.fillStyle = !ledOn ? '#10b981' : '#047857';
-            ctx.beginPath();
-            ctx.arc(furn.x + 22, furn.y + 12, 3, 0, Math.PI * 2);
-            ctx.fill();
+            ctx.fillText(furn.label, fx + fw / 2, fy + fh - 5);
           }
 
           ctx.restore();
@@ -712,29 +807,72 @@ export const GameCanvas: React.FC<Props> = ({
           ctx.restore();
         }
 
-        // Collectible items in town
+        // Collectible items in town (Real Pixel-Art Objects)
         for (const item of INTERACTIVE_ITEMS) {
           if (collectedItemIds.includes(item.id)) continue;
-          const itemBob = Math.sin(currentTime * 0.005 + item.x) * 4;
+          const itemBob = Math.round(Math.sin(currentTime * 0.005 + item.x) * 3);
+          const ix = Math.round(item.x);
+          const iy = Math.round(item.y + itemBob);
 
           ctx.save();
-          ctx.beginPath();
-          ctx.arc(item.x, item.y + itemBob, item.radius + 6, 0, Math.PI * 2);
-          ctx.fillStyle = `${item.color}35`;
-          ctx.fill();
+          // Subtle ground shadow
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
+          ctx.fillRect(ix - 10, Math.round(item.y) + 12, 20, 4);
 
-          ctx.beginPath();
-          ctx.arc(item.x, item.y + itemBob, item.radius, 0, Math.PI * 2);
-          ctx.fillStyle = item.color;
-          ctx.fill();
-          ctx.strokeStyle = '#ffffff';
-          ctx.lineWidth = 1.5;
-          ctx.stroke();
+          if (item.type === 'raw_fact_image') {
+            // Pixel Polaroid Photo / Evidence
+            ctx.fillStyle = '#f8fafc';
+            ctx.fillRect(ix - 11, iy - 13, 22, 26);
+            ctx.strokeStyle = '#0f172a';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(ix - 11, iy - 13, 22, 26);
+            // Photo inner sky & mountain
+            ctx.fillStyle = '#0284c7';
+            ctx.fillRect(ix - 8, iy - 10, 16, 14);
+            ctx.fillStyle = '#10b981';
+            ctx.fillRect(ix - 8, iy - 2, 16, 6);
+          } else if (item.type === 'opinion_card') {
+            // Pixel Opinion / Trading Card
+            ctx.fillStyle = '#6b21a8';
+            ctx.fillRect(ix - 10, iy - 13, 20, 26);
+            ctx.strokeStyle = '#facc15';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(ix - 10, iy - 13, 20, 26);
+            ctx.fillStyle = '#e9d5ff';
+            ctx.fillRect(ix - 6, iy - 8, 12, 4);
+            ctx.fillStyle = '#c084fc';
+            ctx.fillRect(ix - 6, iy - 1, 12, 2);
+            ctx.fillRect(ix - 6, iy + 3, 9, 2);
+            ctx.fillRect(ix - 6, iy + 7, 11, 2);
+          } else if (item.type === 'leaked_data') {
+            // Pixel Confidential Folder / Document
+            ctx.fillStyle = '#d97706';
+            ctx.fillRect(ix - 12, iy - 10, 24, 20);
+            ctx.fillStyle = '#f59e0b';
+            ctx.fillRect(ix - 12, iy - 13, 10, 4);
+            ctx.strokeStyle = '#451a03';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(ix - 12, iy - 10, 24, 20);
+            // Red confidential stamp
+            ctx.fillStyle = '#ef4444';
+            ctx.fillRect(ix - 7, iy - 4, 14, 6);
+          } else {
+            // Pixel Data Chip / Floppy Disk
+            ctx.fillStyle = item.color || '#22d3ee';
+            ctx.fillRect(ix - 11, iy - 11, 22, 22);
+            ctx.strokeStyle = '#0f172a';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(ix - 11, iy - 11, 22, 22);
+            ctx.fillStyle = '#e2e8f0';
+            ctx.fillRect(ix - 6, iy - 11, 12, 8);
+            ctx.fillStyle = '#0f172a';
+            ctx.fillRect(ix - 7, iy + 1, 14, 8);
+          }
 
           ctx.fillStyle = '#ffffff';
           ctx.font = 'bold 9px "Chakra Petch", sans-serif';
           ctx.textAlign = 'center';
-          ctx.fillText(item.name.split(' ')[0], item.x, item.y + itemBob - 14);
+          ctx.fillText(item.name.split(' ')[0], ix, iy - 17);
           ctx.restore();
         }
 

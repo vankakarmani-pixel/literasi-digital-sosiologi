@@ -30,15 +30,6 @@ export const ProfileSetupModal: React.FC<Props> = ({ isOpen, onStartGame }) => {
   const [genderFilter, setGenderFilter] = useState<'All' | 'Laki-laki' | 'Perempuan'>('All');
   const [roomMode, setRoomMode] = useState<'create' | 'join'>('create');
   const [roomCode, setRoomCode] = useState('SOC202');
-  const [avatarTab, setAvatarTab] = useState<'preset' | 'custom'>('preset');
-  const [customLook, setCustomLook] = useState<CustomLook>({
-    hairStyle: 'rapi',
-    hairColor: '#1e293b',
-    outfit: 'seragam_sma',
-    shirtColor: '#f8fafc',
-    face: 'senyum',
-    accessory: 'none',
-  });
 
   if (!isOpen) return null;
 
@@ -64,7 +55,6 @@ export const ProfileSetupModal: React.FC<Props> = ({ isOpen, onStartGame }) => {
       avatarId: selectedAvatarId,
       roomCode: cleanRoomCode,
       isHost: roomMode === 'create',
-      customLook: avatarTab === 'custom' ? customLook : undefined,
     };
 
     onStartGame(profile);
@@ -206,53 +196,29 @@ export const ProfileSetupModal: React.FC<Props> = ({ isOpen, onStartGame }) => {
             {/* Right column: Avatar Selector / Customizer */}
             <div className="space-y-3">
               <div className="flex items-center justify-between flex-wrap gap-2">
-                <div className="flex items-center gap-1.5 p-1 rounded-xl bg-slate-900 border border-slate-700">
-                  <button
-                    type="button"
-                    onClick={() => { sound.playBlip(); setAvatarTab('preset'); }}
-                    className={`px-2.5 py-1 rounded-lg text-xs font-mono font-bold transition cursor-pointer ${
-                      avatarTab === 'preset'
-                        ? 'bg-cyan-500 text-slate-950 shadow'
-                        : 'text-slate-400 hover:text-white'
-                    }`}
-                  >
-                    16 AVATAR SIAP PAKAI
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => { sound.playBlip(); setAvatarTab('custom'); }}
-                    className={`px-2.5 py-1 rounded-lg text-xs font-mono font-bold transition cursor-pointer ${
-                      avatarTab === 'custom'
-                        ? 'bg-pink-500 text-slate-950 shadow'
-                        : 'text-slate-400 hover:text-white'
-                    }`}
-                  >
-                    ✨ KUSTOM RAMBUT & BAJU
-                  </button>
-                </div>
+                <span className="text-xs font-mono font-bold text-cyan-300">
+                  PILIH AVATAR AGEN (16 KARAKTER)
+                </span>
 
-                {avatarTab === 'preset' && (
-                  <div className="flex gap-1 text-[11px] font-mono">
-                    {(['All', 'Laki-laki', 'Perempuan'] as const).map((g) => (
-                      <button
-                        key={g}
-                        type="button"
-                        onClick={() => { sound.playBlip(); setGenderFilter(g); }}
-                        className={`px-2 py-0.5 rounded transition cursor-pointer ${
-                          genderFilter === g
-                            ? 'bg-cyan-600 text-white font-bold'
-                            : 'bg-slate-900 text-slate-400 hover:text-white'
-                        }`}
-                      >
-                        {g}
-                      </button>
-                    ))}
-                  </div>
-                )}
+                <div className="flex gap-1 text-[11px] font-mono">
+                  {(['All', 'Laki-laki', 'Perempuan'] as const).map((g) => (
+                    <button
+                      key={g}
+                      type="button"
+                      onClick={() => { sound.playBlip(); setGenderFilter(g); }}
+                      className={`px-2 py-0.5 rounded transition cursor-pointer ${
+                        genderFilter === g
+                          ? 'bg-cyan-600 text-white font-bold'
+                          : 'bg-slate-900 text-slate-400 hover:text-white'
+                      }`}
+                    >
+                      {g}
+                    </button>
+                  ))}
+                </div>
               </div>
 
-              {avatarTab === 'preset' ? (
-                /* Avatar grid with live pixel art sprites */
+              {/* Avatar grid with live pixel art sprites */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 max-h-80 overflow-y-auto p-1">
                   {filteredAvatars.map((av) => {
                     const isSelected = selectedAvatarId === av.id;
@@ -300,98 +266,6 @@ export const ProfileSetupModal: React.FC<Props> = ({ isOpen, onStartGame }) => {
                     );
                   })}
                 </div>
-              ) : (
-                /* Custom Look Editor */
-                <div className="p-3 rounded-2xl bg-slate-900/90 border border-pink-500/40 space-y-3 text-xs max-h-80 overflow-y-auto">
-                  {/* Outfit */}
-                  <div>
-                    <label className="block text-[11px] font-mono text-pink-300 font-bold mb-1">
-                      PILIH SERAGAM / PAKAIAN:
-                    </label>
-                    <div className="grid grid-cols-2 gap-1.5">
-                      {[
-                        { id: 'seragam_sma', label: 'Seragam Putih SMA' },
-                        { id: 'batik_sma', label: 'Batik SMA Nusantara' },
-                        { id: 'hoodie_cyber', label: 'Hoodie Cyber Toska' },
-                        { id: 'jas_lab', label: 'Jas Lab Peneliti' },
-                      ].map((o) => (
-                        <button
-                          key={o.id}
-                          type="button"
-                          onClick={() => { sound.playBlip(); setCustomLook(p => ({ ...p, outfit: o.id as any })); }}
-                          className={`p-2 rounded-lg border text-left cursor-pointer transition ${
-                            customLook.outfit === o.id
-                              ? 'border-pink-400 bg-pink-950/70 text-pink-200 font-bold'
-                              : 'border-slate-800 bg-slate-950 text-slate-400 hover:border-slate-700'
-                          }`}
-                        >
-                          {o.label}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Hair Style */}
-                  <div>
-                    <label className="block text-[11px] font-mono text-cyan-300 font-bold mb-1">
-                      GAYA RAMBUT:
-                    </label>
-                    <div className="grid grid-cols-2 gap-1.5">
-                      {[
-                        { id: 'rapi', label: 'Rapi Belah Samping' },
-                        { id: 'kuncir', label: 'Kuncir Kuda Bouncy' },
-                        { id: 'poni', label: 'Poni Lurus Imut' },
-                        { id: 'twintail', label: 'Kuncir Dua (Twintail)' },
-                        { id: 'hijab', label: 'Hijab Pelajar Rapi' },
-                        { id: 'undercut', label: 'Undercut Modern' },
-                      ].map((h) => (
-                        <button
-                          key={h.id}
-                          type="button"
-                          onClick={() => { sound.playBlip(); setCustomLook(p => ({ ...p, hairStyle: h.id as any })); }}
-                          className={`p-2 rounded-lg border text-left cursor-pointer transition ${
-                            customLook.hairStyle === h.id
-                              ? 'border-cyan-400 bg-cyan-950/70 text-cyan-200 font-bold'
-                              : 'border-slate-800 bg-slate-950 text-slate-400 hover:border-slate-700'
-                          }`}
-                        >
-                          {h.label}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Face */}
-                  <div>
-                    <label className="block text-[11px] font-mono text-emerald-300 font-bold mb-1">
-                      EKSPRESI WAJAH:
-                    </label>
-                    <div className="grid grid-cols-3 gap-1.5">
-                      {[
-                        { id: 'senyum', label: 'Senyum Ceria' },
-                        { id: 'blush', label: 'Pipi Merona' },
-                        { id: 'kacamata', label: 'Kacamata' },
-                        { id: 'visor_siber', label: 'Visor Siber' },
-                        { id: 'masker', label: 'Masker' },
-                        { id: 'kalem', label: 'Tenang' },
-                      ].map((f) => (
-                        <button
-                          key={f.id}
-                          type="button"
-                          onClick={() => { sound.playBlip(); setCustomLook(p => ({ ...p, face: f.id as any })); }}
-                          className={`p-1.5 rounded-lg border text-center cursor-pointer transition ${
-                            customLook.face === f.id
-                              ? 'border-emerald-400 bg-emerald-950/70 text-emerald-200 font-bold'
-                              : 'border-slate-800 bg-slate-950 text-slate-400 hover:border-slate-700'
-                          }`}
-                        >
-                          {f.label}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
 
           </div>

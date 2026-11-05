@@ -22,15 +22,15 @@ export const TitleScreen: React.FC<Props> = ({ onStart, onOpenGuide }) => {
   return (
     <div className="relative w-full h-full min-h-screen bg-slate-950 flex flex-col items-center justify-between p-6 sm:p-10 select-none overflow-hidden text-slate-100">
       
-      {/* Animated Cyber Background Matrix */}
-      <div className="absolute inset-0 pointer-events-none opacity-20">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(6,182,212,0.15),transparent_70%)]" />
-        <div className="w-full h-full bg-[linear-gradient(to_right,#0f172a_1px,transparent_1px),linear-gradient(to_bottom,#0f172a_1px,transparent_1px)] bg-[size:4rem_4rem]" />
-      </div>
-
-      {/* Floating Holographic Glow Orbs */}
-      <div className="absolute top-1/4 left-1/5 w-72 h-72 rounded-full bg-cyan-500/10 blur-3xl pointer-events-none animate-pulse" />
-      <div className="absolute bottom-1/3 right-1/5 w-80 h-80 rounded-full bg-purple-500/10 blur-3xl pointer-events-none animate-pulse" />
+      {/* Pixel Art Landscape Background */}
+      <div
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat pointer-events-none"
+        style={{
+          backgroundImage: "url('/assets/aistudio/9d37952b14c2083b328c68a6b2708d9d_25680f90.jpg')",
+          imageRendering: 'pixelated',
+        }}
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-slate-950/65 via-slate-950/55 to-slate-950/80 backdrop-blur-[1px] pointer-events-none" />
 
       {/* Top Banner Tag */}
       <div className="relative z-10 flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-900/90 border border-cyan-500/40 text-cyan-300 text-xs font-mono tracking-wider shadow-lg">
