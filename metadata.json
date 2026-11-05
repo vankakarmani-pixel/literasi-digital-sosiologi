@@ -1,0 +1,8 @@
+{
+  "name": "Remix Kota Siber: Agen Perubahan",
+  "description": "Petualangan RPG 2D untuk menguasai literasi digital dan sosiologi melalui misi interaktif di dunia siber yang modern.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

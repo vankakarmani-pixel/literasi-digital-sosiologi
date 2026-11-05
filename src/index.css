@@ -1,0 +1,108 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --cyber-cyan: #06b6d4;
+    --cyber-neon: #10b981;
+    --cyber-purple: #8b5cf6;
+    --cyber-pink: #ec4899;
+    --cyber-amber: #f59e0b;
+    --cyber-bg: #030712;
+  }
+
+  body {
+    background-color: #030712;
+    color: #f3f4f6;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    user-select: none;
+    -webkit-user-select: none;
+    overflow: hidden;
+    touch-action: manipulation;
+  }
+}
+
+.font-cyber {
+  font-family: 'Chakra Petch', sans-serif;
+}
+
+.font-pixel {
+  font-family: 'Pixelify Sans', cursive, sans-serif;
+}
+
+.font-pixel-retro {
+  font-family: 'Silkscreen', monospace;
+}
+
+.font-mono-code {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Stardew Valley & Cozy Pixel Dialogue Box styling */
+.stardew-box {
+  background: #fdf6e2;
+  color: #4a2810;
+  border: 4px solid #8b4513;
+  box-shadow: inset 0 0 0 2px #d4a373, 0 8px 0 rgba(0, 0, 0, 0.4);
+}
+
+.stardew-wood-header {
+  background: linear-gradient(180deg, #965223 0%, #6e330c 100%);
+  color: #ffeedb;
+  border-bottom: 3px solid #4a2105;
+  text-shadow: 1px 1px 0px #000;
+}
+
+/* Custom cyber scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.8);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(6, 182, 212, 0.4);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(6, 182, 212, 0.8);
+}
+
+/* Neon glow utility classes */
+.neon-glow-cyan {
+  box-shadow: 0 0 15px rgba(6, 182, 212, 0.4), inset 0 0 15px rgba(6, 182, 212, 0.1);
+}
+.neon-glow-emerald {
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.4), inset 0 0 15px rgba(16, 185, 129, 0.1);
+}
+.neon-glow-purple {
+  box-shadow: 0 0 15px rgba(139, 92, 246, 0.4), inset 0 0 15px rgba(139, 92, 246, 0.1);
+}
+.neon-glow-pink {
+  box-shadow: 0 0 15px rgba(236, 72, 153, 0.4), inset 0 0 15px rgba(236, 72, 153, 0.1);
+}
+.neon-glow-amber {
+  box-shadow: 0 0 15px rgba(245, 158, 11, 0.4), inset 0 0 15px rgba(245, 158, 11, 0.1);
+}
+.neon-text-cyan {
+  text-shadow: 0 0 8px rgba(6, 182, 212, 0.6);
+}
+.neon-text-pink {
+  text-shadow: 0 0 8px rgba(236, 72, 153, 0.6);
+}
+.neon-text-emerald {
+  text-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+}
+.neon-text-amber {
+  text-shadow: 0 0 8px rgba(245, 158, 11, 0.6);
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.08); opacity: 0.4; }
+  100% { transform: scale(0.95); opacity: 0.8; }
+}
+
+.animate-pulse-ring {
+  animation: pulse-ring 2.5s infinite ease-in-out;
+}
